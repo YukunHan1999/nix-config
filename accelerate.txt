@@ -1,0 +1,20 @@
+cmd example:
+============
+--option substituters "https://mirror.sjtu.edu.cn/nix-channels/store"
+--option substituters "https://mirrors.ustc.edu.cn/nix-channels/store"
+--option substituters "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
+--option substituters "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
+
+flake.nix:
+============
+nixpkgs.url = "git+https://mirrors.nju.edu.cn/git/nixpkgs.git?ref=nixos-25.05&shallow=1";
+
+flake.conf:
+============
+sudo mkdir -p /run/systemd/system/nix-daemon.service.d/
+sudo tee /run/systemd/system/nix-daemon.service.d/override.conf << EOF
+[Service]
+Environment="https_proxy=socks5h://localhost:7897"
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart nix-daemon
